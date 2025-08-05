@@ -1,0 +1,24 @@
+name: Delete All Repos
+
+on:
+  workflow_dispatch:
+
+jobs:
+  delete-repos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete all repositories
+        run: |
+          echo "Fetching repos..."
+          repos=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
+            https://api.github.com/user/repos?per_page=100 | jq -r '.[].name')
+
+          for repo in $repos; do
+            if [[ "$repo" != "repo-cleanup" ]]; then
+              echo "Deleting $repo..."
+              curl -X DELETE -H "Authorization: token ${{ secrets.GH_PAT }}" \
+                https://api.github.com/repos/${{ github.repository_owner }}/$repo
+            else
+              echo "Skipping $repo (this repo)"
+            fi
+          done
