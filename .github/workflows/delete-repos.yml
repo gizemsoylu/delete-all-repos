@@ -17,7 +17,7 @@ jobs:
             if [[ "$repo" != "repo-cleanup" ]]; then
               echo "Deleting $repo..."
               curl -X DELETE -H "Authorization: token ${{ secrets.GH_PAT }}" \
-                https://api.github.com/repos/${{ github.repository_owner }}/$repo
+                https://api.github.com/repos/gizemsoylutr/$repo
             else
               echo "Skipping $repo (this repo)"
             fi
